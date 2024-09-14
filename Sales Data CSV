@@ -1,0 +1,45 @@
+import pandas as pd
+import random
+import numpy as np
+from faker import Faker
+
+# Initialize Faker and random seed
+fake = Faker()
+random.seed(0)
+
+# Number of transactions
+num_transactions = 5000
+
+# Product and region lists
+products = ['Product A', 'Product B', 'Product C', 'Product D', 'Product E']
+regions = ['North', 'South', 'East', 'West']
+
+# Function to create random prices and costs
+def generate_price_and_cost():
+    price = round(random.uniform(10, 500), 2)
+    cost = round(price * random.uniform(0.6, 0.9), 2)
+    return price, cost
+
+# Generate data
+data = {
+    'Transaction ID': [fake.uuid4() for _ in range(num_transactions)],
+    'Date': [fake.date_between(start_date='-1y', end_date='today') for _ in range(num_transactions)],
+    'Product': [random.choice(products) for _ in range(num_transactions)],
+    'Quantity Sold': [random.randint(1, 20) for _ in range(num_transactions)],
+    'Price': [],
+    'Cost': [],
+    'Region': [random.choice(regions) for _ in range(num_transactions)]
+}
+
+# Add price and cost
+for _ in range(num_transactions):
+    price, cost = generate_price_and_cost()
+    data['Price'].append(price)
+    data['Cost'].append(cost)
+
+# Create DataFrame
+df = pd.DataFrame(data)
+
+# Save to CSV
+df.to_csv('product_sales_data.csv', index=False)
+print("Sales data generated and saved as 'product_sales_data.csv'")
